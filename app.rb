@@ -56,7 +56,7 @@ puts mailbody
 
 
 __END__
-Monit report from  <%= `hostname -f` %>
+Monit report from  <%= `hostname` %>
 
 Pickup infomation. unless LED == "fine"
 ----------------------------------------------------------------
