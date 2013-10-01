@@ -37,14 +37,14 @@ class MonitReports
 
   def pickup_unsafe_node(status = [])
     list = []
-    status.map {|x| list << x[:host] unless x[:led] == "2" }
+    status.map {|x| list << x[:hostname] unless x[:led] == 2 }
     list = ["All hosts fine."] if list == []
     list
   end
 
   def create_summary(status = [])
     summary = ""
-    status.map {|x| summary << sprintf("%-20s", x[:host]) + "  " + sprintf("%-20s", x[:status]) + "\n" }
+    status.map {|x| summary << sprintf("%-20s", x[:hostname]) + "  " + sprintf("%-20s", x[:status]) + "\n" }
     summary
   end
 
@@ -55,6 +55,8 @@ require 'erb'
 
 mon = MonitReports.new
 mon.stamp_auth ENV["MMONIT_USER"], ENV["MMONIT_PASSWORD"]
+
+$logger.info mon.retrieve_status_list if $DEBUG
 status = mon.retrieve_status_list[:records]
 
 
