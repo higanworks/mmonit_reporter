@@ -2,12 +2,18 @@
 
 require 'json'
 require 'faraday'
+require 'logger'
+
+## for debug
+$logger = Logger.new($stdout)
+$DEBUG  = ENV['MDEBUG']
 
 class MonitReports
   def initialize(mmonit = "http://127.0.0.1:8080")
     @connection = Faraday.new(:url => mmonit)
     res = @connection.get "/index.csp"
-    @cookie = res.headers['set-cookie']
+    $logger.info res.headers if $DEBUG
+    @cookie = res.headers['set-cookie'].split.select {|a| a.match(/zsessionid/)}
     @accepted = false
   end
 
@@ -16,13 +22,14 @@ class MonitReports
       req.headers['Cookie'] = @cookie
       req.body = {"z_password" => password, "z_username" => username}
     end
+    $logger.info res.body if $DEBUG
     raise "Authentication Faild" unless (300..399).include?(res.status)
     @accepted = true
   end
 
   def retrieve_status_list
     raise "Authentication first! Call #stamp_auth please." unless @accepted
-    res = @connection.post "/json/status/list" do |req|
+    res = @connection.post "/status/hosts/list" do |req|
       req.headers['Cookie'] = @cookie
     end
     JSON.parse(res.body, :symbolize_names => true )
