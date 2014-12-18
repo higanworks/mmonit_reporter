@@ -12,7 +12,7 @@ requirements
 
 * Faraday(rubygems)
 * rvm
-* M/Monit (create none admin user recommend.)
+* M/Monit3.x (create none admin user recommend.)
 
 Usage
 ----
@@ -34,7 +34,7 @@ Output Example
 
 <pre><code>$ MMONIT_USER=user MMONIT_PASSWORD=password ./app.rb
 
-Monit report from  node01.example.jp
+Monit report from  node01
 
 
 Pickup infomation. unless LED == "fine"
